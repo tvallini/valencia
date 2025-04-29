@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Rutas de Senderismo en Valencia</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
+  <script>
+    const map = L.map('map').setView([39.5, -0.6], 9);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const rutas = [
+      { archivo: 'chulilla.gpx', nombre: 'Puentes de Chulilla', color: 'blue' },
+      { archivo: 'anna.gpx', nombre: 'Cascadas de Anna', color: 'green' },
+      { archivo: 'bernia.gpx', nombre: 'Forat de Bernia', color: 'red' },
+      { archivo: 'chelva.gpx', nombre: 'Ruta del Agua de Chelva', color: 'purple' },
+      { archivo: 'mascarat.gpx', nombre: 'Cañón del Mascarat', color: 'orange' },
+    ];
+
+    rutas.forEach(ruta => {
+      new L.GPX(ruta.archivo, {
+        async: true,
+        polyline_options: {
+          color: ruta.color,
+          weight: 4,
+          opacity: 0.8
+        },
+        marker_options: {
+          startIconUrl: null,
+          endIconUrl: null,
+          shadowUrl: null
+        }
+      }).on('loaded', function(e) {
+        console.log(`${ruta.nombre} cargada`);
+        // map.fitBounds(e.target.getBounds()); // solo si quieres centrar el mapa en cada ruta al cargar
+      }).addTo(map);
+    });
+  </script>
+</body>
+</html>
