@@ -9,34 +9,47 @@
     #menu {
       position: absolute;
       top: 10px;
-      left: 10px;
+      right: 10px;
       background: white;
       padding: 10px;
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
       z-index: 1000;
+      max-height: 90vh;
+      overflow-y: auto;
+      width: 300px;
     }
     #menu h3 {
       margin-top: 0;
       font-size: 16px;
     }
-    #menu ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    #menu .item {
+      margin-bottom: 10px;
     }
-    #menu li {
-      margin: 4px 0;
-      cursor: pointer;
+    #menu .item-title {
+      font-weight: bold;
       color: #0077cc;
-      text-decoration: underline;
+      cursor: pointer;
+    }
+    #menu .description {
+      font-size: 14px;
+      color: #333;
     }
   </style>
 </head>
 <body>
   <div id="menu">
-    <h3>Rutas</h3>
-    <ul id="ruta-lista"></ul>
+    <h3>Rutas de Senderismo y Restaurantes</h3>
+    <div id="ruta-lista"></div>
+    <hr>
+    <h4>Arroces recomendados en la Albufera</h4>
+    <ul>
+      <li><strong>Restaurante Mateu</strong> – El Palmar (clásico, auténtico)</li>
+      <li><strong>Nou Racó</strong> – Vista al lago, ideal para paella y arroz a banda</li>
+      <li><strong>Bon Aire</strong> – Premio a mejor paella del mundo</li>
+      <li><strong>La Genuina</strong> – Cocina tradicional en entorno relajado</li>
+      <li><strong>Restaurante L’Estibador</strong> – A pie de playa, buena variedad de arroces</li>
+    </ul>
   </div>
   <div id="map"></div>
 
@@ -49,11 +62,36 @@
     }).addTo(map);
 
     const rutas = [
-      { archivo: 'chulilla.gpx', nombre: 'Puentes de Chulilla', color: 'blue' },
-      { archivo: 'anna.gpx', nombre: 'Cascadas de Anna', color: 'green' },
-      { archivo: 'bernia.gpx', nombre: 'Forat de Bernia', color: 'red' },
-      { archivo: 'chelva.gpx', nombre: 'Ruta del Agua de Chelva', color: 'purple' },
-      { archivo: 'mascarat.gpx', nombre: 'Cañón del Mascarat', color: 'orange' },
+      {
+        archivo: 'chulilla.gpx',
+        nombre: 'Puentes de Chulilla',
+        color: 'blue',
+        descripcion: 'Ruta de unos 10 km con vistas espectaculares, puentes colgantes y cañones junto al río Turia.'
+      },
+      {
+        archivo: 'anna.gpx',
+        nombre: 'Cascadas de Anna',
+        color: 'green',
+        descripcion: 'Paseo por el lago de Anna y las cascadas cercanas. Ideal para un plan familiar.'
+      },
+      {
+        archivo: 'bernia.gpx',
+        nombre: 'Forat de Bernia',
+        color: 'red',
+        descripcion: 'Sendero circular de media montaña con túnel natural (el forat) y vistas al mar y Peñón de Ifach.'
+      },
+      {
+        archivo: 'chelva.gpx',
+        nombre: 'Ruta del Agua de Chelva',
+        color: 'purple',
+        descripcion: 'Recorrido entre acequias, acueductos y antiguas canalizaciones. Historia y naturaleza.'
+      },
+      {
+        archivo: 'mascarat.gpx',
+        nombre: 'Cañón del Mascarat',
+        color: 'orange',
+        descripcion: 'Ruta por un impresionante desfiladero entre Calpe y Altea. Corto pero escénico.'
+      }
     ];
 
     const listaMenu = document.getElementById('ruta-lista');
@@ -76,14 +114,25 @@
         referencias[i] = e.target.getBounds();
       }).addTo(map);
 
-      const li = document.createElement('li');
-      li.textContent = ruta.nombre;
-      li.addEventListener('click', () => {
+      const div = document.createElement('div');
+      div.className = 'item';
+
+      const title = document.createElement('div');
+      title.textContent = ruta.nombre;
+      title.className = 'item-title';
+      title.addEventListener('click', () => {
         if (referencias[i]) {
           map.fitBounds(referencias[i]);
         }
       });
-      listaMenu.appendChild(li);
+
+      const desc = document.createElement('div');
+      desc.className = 'description';
+      desc.textContent = ruta.descripcion;
+
+      div.appendChild(title);
+      div.appendChild(desc);
+      listaMenu.appendChild(div);
     });
   </script>
 </body>
